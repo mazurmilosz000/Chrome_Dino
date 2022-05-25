@@ -7,6 +7,7 @@ FPS = 60
 # images
 # a variable that represents background
 BACKGROUND = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
+
 # a list that represents dino running
 DINO_RUNNING = [pygame.image.load(os.path.join("Assets/Dino", "DinoRun1.png")),
                 pygame.image.load(os.path.join("Assets/Dino", "DinoRun2.png"))]
