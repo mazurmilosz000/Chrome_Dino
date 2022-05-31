@@ -2,7 +2,14 @@ import pygame
 import os
 
 WINDOW_SIZE = WIDTH, HEIGHT = 1100, 600
+screen = pygame.display.set_mode(WINDOW_SIZE)
 FPS = 60
+
+WHITE = (255, 255, 255)
+
+# position of dinosaur (position is not changeable)
+X_POS = 80
+Y_POS = 310
 
 # images
 # a variable that represents background
