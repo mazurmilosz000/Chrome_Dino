@@ -16,24 +16,24 @@ class Dinosaur(pygame.sprite.Sprite):
         self.step_index = 0
         self.image = self.run_img[0]
         self.dino_rect = self.image.get_rect()
-        self.dino_rect.x = X_POS
-        self.dino_rect.y = Y_POS
+        self.dino_rect.x = DINO_X_POS
+        self.dino_rect.y = DINO_Y_START_POS
+        self.y_velocity = 0
 
     def get_event(self, user_input):
         if self.running:
             self.run()
-        if self.jumping:
-            self.jump()
         if self.ducking:
             self.duck()
 
-        if self.step_index >= 10:
+        if self.step_index >= DINO_ANIM_SPEED*2:
             self.step_index = 0
 
         if user_input[pygame.K_UP] and not self.jumping:
             self.running = False
             self.jumping = True
             self.ducking = False
+            self.jump()
         elif user_input[pygame.K_DOWN] and not self.ducking:
             self.running = False
             self.jumping = False
@@ -44,17 +44,37 @@ class Dinosaur(pygame.sprite.Sprite):
             self.ducking = False
 
     def run(self):
-        self.image = self.run_img[self.step_index // 5]
+        self.image = self.run_img[self.step_index // DINO_ANIM_SPEED]
         self.step_index += 1
 
     def jump(self):
-        pass
+        self.y_velocity = -DINO_JUMP_HEIGHT
 
     def duck(self):
         pass
 
-    def draw(self, surface):
+    def draw(self, surface, user_input):
+
+        # move the dino downwards every frame
+        self.dino_rect.y += self.y_velocity
+        if not self.grounded:
+            self.y_velocity += DINO_GRAVITY_AMOUNT
+
+            # in the real game, holding down in midair moves the dino downwards faster
+            if user_input[pygame.K_DOWN]:
+                self.y_velocity += 1
+
+            if self.dino_rect.y > DINO_Y_START_POS:  # fix dino clipping through the floor
+                self.dino_rect.y = DINO_Y_START_POS
+                self.y_velocity = 0
+                self.jumping = False
+
         surface.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
+
+    @property
+    def grounded(self):
+        """Checks if the dino is on the floor"""
+        return self.dino_rect.y == DINO_Y_START_POS and not self.jumping
 
 
 # instantiation of objects
@@ -80,7 +100,7 @@ class Game:
                         self.running = False
 
             user_input = pygame.key.get_pressed()
-            dinosaur.draw(screen)
+            dinosaur.draw(screen, user_input)
             dinosaur.get_event(user_input)
 
             pygame.display.update()
@@ -90,6 +110,5 @@ class Game:
 
 
 if __name__ == '__main__':
-
     game = Game()
     game.run()
