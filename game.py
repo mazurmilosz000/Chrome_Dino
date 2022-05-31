@@ -45,9 +45,6 @@ class Dinosaur(pygame.sprite.Sprite):
 
     def run(self):
         self.image = self.run_img[self.step_index // 5]
-        self.dino_rect = self.image.get_rect()
-        self.dino_rect.x = X_POS
-        self.dino_rect.y = Y_POS
         self.step_index += 1
 
     def jump(self):
