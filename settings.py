@@ -7,9 +7,12 @@ FPS = 60
 
 WHITE = (255, 255, 255)
 
-# position of dinosaur (position is not changeable)
-X_POS = 80
-Y_POS = 310
+# dinosaur attributes
+DINO_X_POS = 80
+DINO_Y_START_POS = 310
+DINO_ANIM_SPEED = 9
+DINO_JUMP_HEIGHT = 15
+DINO_GRAVITY_AMOUNT = 0.7
 
 # images
 # a variable that represents background
