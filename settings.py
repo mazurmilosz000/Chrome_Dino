@@ -1,6 +1,7 @@
 import pygame
 import os
 
+
 WINDOW_SIZE = WIDTH, HEIGHT = 1100, 600
 screen = pygame.display.set_mode(WINDOW_SIZE)
 FPS = 60
@@ -10,6 +11,7 @@ WHITE = (255, 255, 255)
 # dinosaur attributes
 DINO_X_POS = 80
 DINO_Y_START_POS = 310
+DINO_Y_DUCK_POS = 530
 DINO_ANIM_SPEED = 9
 DINO_JUMP_HEIGHT = 15
 DINO_GRAVITY_AMOUNT = 0.7
@@ -42,3 +44,5 @@ LARGE_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus1.pn
 SMALL_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus1.png")),
                 pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus2.png")),
                 pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus3.png"))]
+
+CLOUD = pygame.image.load(os.path.join("Assets/Other", "Cloud.png"))
