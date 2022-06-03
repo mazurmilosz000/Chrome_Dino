@@ -88,16 +88,16 @@ class Dinosaur(pygame.sprite.Sprite):
 
 class Cloud:
     def __init__(self):
-        self.x = WIDTH + random.randint(800, 1000)
-        self.y = random.randint(50, 100)
+        self.x = WIDTH + random.randint(0, WIDTH)
+        self.y = random.randint(50, 300)
         self.image = CLOUD
         self.width = self.image.get_width()
 
     def update(self):
         self.x -= game_speed - 6
         if self.x < -self.width:
-            self.x = WIDTH
-            self.y = random.randint(50, 100)
+            self.x = WIDTH+random.randint(0, 100)
+            self.y = random.randint(50, 300)
 
     def draw(self, surface):
         surface.blit(self.image, (self.x, self.y))
@@ -105,7 +105,10 @@ class Cloud:
 
 # instantiation of objects
 dinosaur = Dinosaur()
-cloud = Cloud()
+clouds = [Cloud(), Cloud(), Cloud(), Cloud()]
+
+# game speed
+game_speed = 14
 
 
 class Game:
@@ -115,8 +118,6 @@ class Game:
         self.clock = pygame.time.Clock()
         pygame.display.set_caption("Chrome Dino!")
         self.running = True
-        global game_speed
-        game_speed = 14
 
     def run(self):
         while self.running:
@@ -129,10 +130,11 @@ class Game:
                         self.running = False
 
             user_input = pygame.key.get_pressed()
+            for cloud in clouds:
+                cloud.draw(screen)
+                cloud.update()
             dinosaur.draw(screen, user_input)
             dinosaur.get_event(user_input)
-            cloud.draw(screen)
-            cloud.update()
 
             pygame.display.update()
             self.clock.tick(FPS)
