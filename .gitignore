@@ -1,0 +1,3 @@
+.idea
+.vscode
+# this removes .idea and .vscode folders from git
