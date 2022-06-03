@@ -56,7 +56,6 @@ class Dinosaur(pygame.sprite.Sprite):
     def jump(self):
         self.y_velocity = -DINO_JUMP_HEIGHT
 
-    #  todo: change position y when ducking (dino too high)
     def duck(self):
         self.image = self.duck_img[self.step_index // DINO_ANIM_SPEED]
         self.step_index += 2
@@ -78,7 +77,8 @@ class Dinosaur(pygame.sprite.Sprite):
                 self.y_velocity = 0
                 self.jumping = False
 
-        surface.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
+        duck_offset = int(self.image.get_height() == 60)*36  # this is definitly a bad way to do this
+        surface.blit(self.image, (self.dino_rect.x, self.dino_rect.y+duck_offset))
 
     @property
     def grounded(self):
