@@ -4,6 +4,23 @@ import random
 
 # todo: add documentation, add levels, add different items
 
+class Background:
+    def __init__(self, x, y):
+        self.width = WIDTH
+        self.height = HEIGHT
+        self.image = BG
+        self.x = x
+        self.y = y
+        self.draw()
+
+    def update(self, speed):
+        self.x -= speed
+        if self.x <= -WIDTH:
+            self.x = WIDTH
+
+    def draw(self):
+        screen.blit(self.image, (self.x, self.y))
+
 
 class Dinosaur(pygame.sprite.Sprite):
     def __init__(self):
@@ -89,7 +106,7 @@ class Dinosaur(pygame.sprite.Sprite):
 class Cloud:
     def __init__(self):
         self.x = WIDTH + random.randint(0, WIDTH)
-        self.y = random.randint(50, 300)
+        self.y = random.randint(50, 150)
         self.image = CLOUD
         self.width = self.image.get_width()
 
@@ -97,18 +114,21 @@ class Cloud:
         self.x -= game_speed - 6
         if self.x < -self.width:
             self.x = WIDTH+random.randint(0, 100)
-            self.y = random.randint(50, 300)
+            self.y = random.randint(50, 150)
 
     def draw(self, surface):
         surface.blit(self.image, (self.x, self.y))
 
 
 # instantiation of objects
+background = [Background(X_POS_BG, Y_POS_BG), Background(X_POS_BG + WIDTH, Y_POS_BG)]
 dinosaur = Dinosaur()
 clouds = [Cloud(), Cloud(), Cloud(), Cloud()]
 
 # game speed
 game_speed = 14
+x_pos_bg = 0
+y_pos_bg = 380
 
 
 class Game:
@@ -128,6 +148,10 @@ class Game:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.running = False
+
+            for bg in background:
+                bg.update(game_speed)
+                bg.draw()
 
             user_input = pygame.key.get_pressed()
             for cloud in clouds:

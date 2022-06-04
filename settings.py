@@ -8,6 +8,10 @@ FPS = 60
 
 WHITE = (255, 255, 255)
 
+# background attributes
+X_POS_BG = 0
+Y_POS_BG = 380
+
 # dinosaur attributes
 DINO_X_POS = 80
 DINO_Y_START_POS = 310
@@ -46,3 +50,5 @@ SMALL_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus1.pn
                 pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus3.png"))]
 
 CLOUD = pygame.image.load(os.path.join("Assets/Other", "Cloud.png"))
+
+BG = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
