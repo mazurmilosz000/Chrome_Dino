@@ -1,8 +1,9 @@
 from settings import *
 import random
 
+"""It's a modify chrome dino game with a different levels. A game speed depends on level which user can choose."""
+# todo: fix position of cactus, fix bird animation, add collisions
 
-# todo: add documentation, add levels, add different items
 
 class Background:
     def __init__(self, x, y):
@@ -120,15 +121,64 @@ class Cloud:
         surface.blit(self.image, (self.x, self.y))
 
 
+class Obstacles:
+    def __init__(self, image, type):
+        self.image = image
+        self.type = type
+        self.rect = self.image[self.type].get_rect()
+        self.rect.x = WIDTH
+
+    def update(self):
+        # move obstacle cross the screen
+        self.rect.x -= game_speed
+        # remove obstacles when they are off the screen
+        if self.rect.x < -self.rect.width:
+            obstacles.pop()
+
+    def draw(self, surface):
+        surface.blit(self.image[self.type], self.rect)
+
+
+class SmallCactus(Obstacles):
+    def __init__(self, image):
+        self.type = random.randint(0, 2)
+        super().__init__(image, self.type)
+
+
+
+class LargeCactus(Obstacles):
+    def __init__(self, image):
+        self.type = random.randint(0, 2)
+        super().__init__(image, self.type)
+
+
+
+class Bird(Obstacles):
+    def __init__(self, image):
+        # display only 1 bird on the screen
+        self.type = 0
+        super().__init__(image, self.type)
+        self.rect.y = 250
+        self.step_index = 0
+
+    def draw(self, surface):
+        if self.step_index >= DINO_ANIM_SPEED:
+            self.step_index = 0
+        surface.blit(self.image[self.step_index//5], self.rect)
+        self.step_index += 1
+
+
 # instantiation of objects
 background = [Background(X_POS_BG, Y_POS_BG), Background(X_POS_BG + WIDTH, Y_POS_BG)]
 dinosaur = Dinosaur()
 clouds = [Cloud(), Cloud(), Cloud(), Cloud()]
+obstacles = []
 
 # game speed
 game_speed = 14
 x_pos_bg = 0
 y_pos_bg = 380
+
 
 
 class Game:
@@ -159,6 +209,18 @@ class Game:
                 cloud.update()
             dinosaur.draw(screen, user_input)
             dinosaur.get_event(user_input)
+
+            if len(obstacles) == 0:
+                if random.randint(0, 2) == 0:
+                    obstacles.append(SmallCactus(SMALL_CACTUS))
+                elif random.randint(0, 2) == 1:
+                    obstacles.append(LargeCactus(LARGE_CACTUS))
+                elif random.randint(0, 2) == 2:
+                    obstacles.append(Bird(BIRD_FLYING))
+
+            for obstacle in obstacles:
+                obstacle.draw(screen)
+                obstacle.update()
 
             pygame.display.update()
             self.clock.tick(FPS)
