@@ -52,3 +52,5 @@ SMALL_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus1.pn
 CLOUD = pygame.image.load(os.path.join("Assets/Other", "Cloud.png"))
 
 BG = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
+
+RESUME_IMAGE = pygame.image.load(os.path.join("buttons", "button_resume.png"))

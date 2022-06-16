@@ -1,8 +1,9 @@
 from settings import *
 import random
+import button
 
 """It's a modify chrome dino game with a different levels. A game speed depends on level which user can choose."""
-# todo: fix position of cactus, fix bird animation, add collisions
+# todo: add collisions, create and add start menu with different difficulties levels
 
 
 class Background:
@@ -143,14 +144,14 @@ class SmallCactus(Obstacles):
     def __init__(self, image):
         self.type = random.randint(0, 2)
         super().__init__(image, self.type)
-
+        self.rect.y = 325
 
 
 class LargeCactus(Obstacles):
     def __init__(self, image):
         self.type = random.randint(0, 2)
         super().__init__(image, self.type)
-
+        self.rect.y = 300
 
 
 class Bird(Obstacles):
@@ -158,13 +159,14 @@ class Bird(Obstacles):
         # display only 1 bird on the screen
         self.type = 0
         super().__init__(image, self.type)
-        self.rect.y = 250
+        self.rect.y = 260
         self.step_index = 0
 
     def draw(self, surface):
-        if self.step_index >= DINO_ANIM_SPEED:
+        # value 36 to slow down the bird animation
+        if self.step_index >= 36:
             self.step_index = 0
-        surface.blit(self.image[self.step_index//5], self.rect)
+        surface.blit(self.image[self.step_index//20], self.rect)
         self.step_index += 1
 
 
@@ -174,11 +176,14 @@ dinosaur = Dinosaur()
 clouds = [Cloud(), Cloud(), Cloud(), Cloud()]
 obstacles = []
 
+# instantiation of buttons
+resume_button = button.Button(304, 125, RESUME_IMAGE, 1)
+
+
 # game speed
 game_speed = 14
 x_pos_bg = 0
 y_pos_bg = 380
-
 
 
 class Game:
@@ -188,16 +193,22 @@ class Game:
         self.clock = pygame.time.Clock()
         pygame.display.set_caption("Chrome Dino!")
         self.running = True
+        self.game_paused = False
 
     def run(self):
         while self.running:
             self.screen.fill(WHITE)
+            # check if game is paused
+            if self.game_paused:
+                # resume_button.draw(screen)
+                print('paused')
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.running = False
+                        self.game_paused = True
+                        # self.running = False
 
             for bg in background:
                 bg.update(game_speed)
