@@ -3,7 +3,9 @@ import random
 import button
 
 """It's a modify chrome dino game with a different levels. A game speed depends on level which user can choose."""
-# todo: add collisions, create and add start menu with different difficulties levels, break the code into modules
+# todo: add collisions, break the code into modules, fix 'video system not initialized' error, add sound effects
+# todo: add save top score, check code (delete unnecessary items), add documentation, add requirements.txt
+# todo: delete button module
 
 
 class Background:
@@ -185,6 +187,13 @@ resume_button = button.Button(304, 125, RESUME_IMAGE, 1)
 game_speed = 10
 
 
+def display_text(character, pos_x, pos_y, txt):
+    text = character.render(txt, True, (0, 0, 0))
+    text_rect = text.get_rect()
+    text_rect.center = (pos_x, pos_y)
+    screen.blit(text, text_rect)
+
+
 class Game:
     def __init__(self):
         pygame.init()
@@ -209,20 +218,18 @@ class Game:
         points_rect.center = (1000, 40)
         screen.blit(points, points_rect)
 
-    def run(self):
+    def run(self, speed=10):
+        global game_speed
+        game_speed = speed
         while self.running:
             self.screen.fill(WHITE)
-            # check if game is paused
-            if self.game_paused:
-                # resume_button.draw(screen)
-                print('paused')
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.game_paused = True
-                        # self.running = False
+                        self.main_menu()
 
             for bg in background:
                 bg.update(game_speed)
@@ -254,15 +261,51 @@ class Game:
 
         pygame.quit()
 
-    def menu(self):
-        pygame.display.set_caption("Menu")
-        while self.running:
+    """ A method that represents the main menu of the game. The menu allows you to select the difficulty level of the 
+    game (easy, hard) and in case of pausing, it allows you to resume the game."""
+    def main_menu(self):
+        while True:
             self.screen.fill(WHITE)
-            if self.deaths == 0:
-                self.run()
+            if self.deaths == 0 and not self.game_paused:
+                pygame.display.set_caption("Menu")
+                display_text(big_menu_font, 550, 40, "MAIN MENU")
+                display_text(menu_font, 550, 120, "press 'e' to easy mode")
+                display_text(menu_font, 550, 200, "press 'h' to hard mode")
+                display_text(menu_font, 550, 480, "press 'q' to quit")
+
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_e:
+                            self.run()
+                        if event.key == pygame.K_h:
+                            self.run(20)
+                        if event.key == pygame.K_q:
+                            pygame.quit()
+
+            elif self.deaths == 0 and self.game_paused:
+                pygame.display.set_caption("Paused")
+
+                # get current speed of game to unpause with the same speed
+                current_speed = game_speed
+                display_text(big_menu_font, 550, 40, "GAME PAUSED")
+                display_text(menu_font, 550, 120, "press 'space' to resume the game")
+                display_text(menu_font, 550, 480, "press 'q' to quit")
+
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            self.run(current_speed)
+                        if event.key == pygame.K_q:
+                            pygame.quit()
+
+            pygame.display.update()
 
 
 if __name__ == '__main__':
+    pygame.init()
     game = Game()
-    #game.run()
-    game.menu()
+    game.main_menu()

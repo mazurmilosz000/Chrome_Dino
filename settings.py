@@ -20,9 +20,16 @@ DINO_ANIM_SPEED = 9
 DINO_JUMP_HEIGHT = 15
 DINO_GRAVITY_AMOUNT = 0.7
 
-# font
+# fonts
 pygame.init()
-font = pygame.font.SysFont('Comic Sans MS',20)
+
+# regular font to display score
+font = pygame.font.SysFont('Comic Sans MS', 20)
+
+# fonts to display menu
+menu_font = pygame.font.SysFont('Arial Black', 20)
+
+big_menu_font = pygame.font.SysFont('Arial Black', 30)
 
 # images
 # a variable that represents background
