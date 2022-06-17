@@ -3,7 +3,7 @@ import random
 import button
 
 """It's a modify chrome dino game with a different levels. A game speed depends on level which user can choose."""
-# todo: add collisions, create and add start menu with different difficulties levels
+# todo: add collisions, create and add start menu with different difficulties levels, break the code into modules
 
 
 class Background:
@@ -89,14 +89,14 @@ class Dinosaur(pygame.sprite.Sprite):
 
             # in the real game, holding down in midair moves the dino downwards faster
             if user_input[pygame.K_DOWN]:
-                self.y_velocity += 1
+                self.y_velocity += 1.25
 
-            if self.dino_rect.y > DINO_Y_START_POS:  # fix dino clipping through the floor
+            if self.dino_rect.y > DINO_Y_START_POS:  # fixed dino clipping through the floor
                 self.dino_rect.y = DINO_Y_START_POS
                 self.y_velocity = 0
                 self.jumping = False
 
-        duck_offset = int(self.image.get_height() == 60)*36  # this is definitly a bad way to do this
+        duck_offset = int(self.image.get_height() == 60)*36  # this is definitely a bad way to do this
         surface.blit(self.image, (self.dino_rect.x, self.dino_rect.y+duck_offset))
 
     @property
@@ -123,15 +123,15 @@ class Cloud:
 
 
 class Obstacles:
-    def __init__(self, image, type):
+    def __init__(self, image, image_type):
         self.image = image
-        self.type = type
+        self.type = image_type
         self.rect = self.image[self.type].get_rect()
         self.rect.x = WIDTH
 
-    def update(self):
+    def update(self, g_speed):
         # move obstacle cross the screen
-        self.rect.x -= game_speed
+        self.rect.x -= g_speed
         # remove obstacles when they are off the screen
         if self.rect.x < -self.rect.width:
             obstacles.pop()
@@ -159,7 +159,8 @@ class Bird(Obstacles):
         # display only 1 bird on the screen
         self.type = 0
         super().__init__(image, self.type)
-        self.rect.y = 260
+        # random choice from 3 different positions
+        self.rect.y = random.choice([260, 220, 300])
         self.step_index = 0
 
     def draw(self, surface):
@@ -181,9 +182,7 @@ resume_button = button.Button(304, 125, RESUME_IMAGE, 1)
 
 
 # game speed
-game_speed = 14
-x_pos_bg = 0
-y_pos_bg = 380
+game_speed = 10
 
 
 class Game:
@@ -194,6 +193,21 @@ class Game:
         pygame.display.set_caption("Chrome Dino!")
         self.running = True
         self.game_paused = False
+        self.game_score = 0
+        self.deaths = 0
+
+    def score(self):
+        global game_speed
+        self.game_score += 0.25
+        if self.game_score % 100 == 0:
+            game_speed += 1
+
+        # render text
+
+        points = font.render("Points: " + "{:.0f}".format(self.game_score), True, (0, 0, 0))
+        points_rect = points.get_rect()
+        points_rect.center = (1000, 40)
+        screen.blit(points, points_rect)
 
     def run(self):
         while self.running:
@@ -231,14 +245,24 @@ class Game:
 
             for obstacle in obstacles:
                 obstacle.draw(screen)
-                obstacle.update()
+                obstacle.update(game_speed)
+
+            self.score()
 
             pygame.display.update()
             self.clock.tick(FPS)
 
         pygame.quit()
 
+    def menu(self):
+        pygame.display.set_caption("Menu")
+        while self.running:
+            self.screen.fill(WHITE)
+            if self.deaths == 0:
+                self.run()
+
 
 if __name__ == '__main__':
     game = Game()
-    game.run()
+    #game.run()
+    game.menu()
