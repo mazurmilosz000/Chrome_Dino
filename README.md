@@ -4,7 +4,7 @@ This is my version of [Chrome Dino Game](https://chromedino.com/)
 ## Technologies
 Project is created with:
 * Python 3.9.6
-* 2.1.2
+* Pygame 2.1.2
 
 ## How to run?
 ```
