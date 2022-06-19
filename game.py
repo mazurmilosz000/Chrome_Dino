@@ -253,6 +253,9 @@ class Game:
             for obstacle in obstacles:
                 obstacle.draw(screen)
                 obstacle.update(game_speed)
+                # if dinosaur.dino_rect.colliderect(obstacle.rect):
+                #     game_speed = 0
+                #     dinosaur.image = DINO_DEAD
 
             self.score()
 
@@ -278,8 +281,10 @@ class Game:
                         pygame.quit()
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_e:
+                            pygame.display.set_caption("Chrome Dino Game")
                             self.run()
                         if event.key == pygame.K_h:
+                            pygame.display.set_caption("Chrome Dino Game")
                             self.run(20)
                         if event.key == pygame.K_q:
                             pygame.quit()
