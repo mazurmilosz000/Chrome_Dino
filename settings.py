@@ -1,5 +1,6 @@
 import pygame
 import os
+from pygame import mixer
 
 
 WINDOW_SIZE = WIDTH, HEIGHT = 1100, 600
@@ -66,4 +67,10 @@ CLOUD = pygame.image.load(os.path.join("Assets/Other", "Cloud.png"))
 
 BG = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
 
-RESUME_IMAGE = pygame.image.load(os.path.join("buttons", "button_resume.png"))
+# Sound effects
+DIE_SOUND = mixer.Sound(os.path.join("sounds", "die.wav"))
+
+JUMP_SOUND = mixer.Sound(os.path.join("sounds", "jump.wav"))
+
+POINT_SOUND = mixer.Sound(os.path.join("sounds", "point.wav"))
+
